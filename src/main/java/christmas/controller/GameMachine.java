@@ -17,9 +17,7 @@ public class GameMachine {
     }
 
     public void start() {
-        // 구매자 입력
         int inputDate = inputView.inputVisitDate();
-
         Buyer buyer = inputView.inputMenuAndCounts();
 
         // 출력
@@ -29,11 +27,11 @@ public class GameMachine {
         System.out.println(buyer);
 
         System.out.println("\n<할인 전 총주문 금액>");
-        System.out.println(numberFormat.format(buyer.calculateTotalPrice()) + "원");
+        System.out.println(numberFormat.format(buyer.getTotalPrice()) + "원");
 
         System.out.println("\n<증정 메뉴>");
         String presentationsMenu = "없음";
-        boolean isPresentation = restaurant.isPresentation(buyer.calculateTotalPrice());
+        boolean isPresentation = restaurant.isPresentation(buyer.getTotalPrice());
         if (isPresentation) {
             presentationsMenu = "샴페인 1개";
         }
@@ -41,7 +39,7 @@ public class GameMachine {
 
         // 혜택 내역
         System.out.println("\n<혜택 내역>");
-        boolean isDiscount = buyer.calculateTotalPrice() >= 10000;
+        boolean isDiscount = buyer.getTotalPrice() >= 10000;
         int calculateTotalDiscount = 0;
         // 크리스마스 디데이
         boolean isChristmasDiscount = restaurant.isChristmasDiscount(inputDate);
@@ -100,33 +98,17 @@ public class GameMachine {
         System.out.println("\n<할인 후 예상 결제 금액>");
         String discountAfterTotalPrice = String.format("%s원%n",
                 numberFormat.format(
-                        buyer.calculateTotalPrice() - calculateTotalDiscount));
+                        buyer.getTotalPrice() - calculateTotalDiscount));
         if (isPresentation) {
             discountAfterTotalPrice = String.format("%s원%n",
                     numberFormat.format(
-                            buyer.calculateTotalPrice() - calculateTotalDiscount + restaurant.presentationDiscount()));
+                            buyer.getTotalPrice() - calculateTotalDiscount + restaurant.presentationDiscount()));
         }
         System.out.print(discountAfterTotalPrice);
 
         // 12월 이벤트 배지
         System.out.println("\n<12월 이벤트 배지>");
-        System.out.println(eventBadge(calculateTotalDiscount));
-    }
-
-    private String eventBadge(int calculateTotalDiscount) {
-        if (calculateTotalDiscount >= 20000) {
-            return "산타";
-        }
-
-        if (calculateTotalDiscount >= 10000) {
-            return "트리";
-        }
-
-        if (calculateTotalDiscount >= 5000) {
-            return "별";
-        }
-
-        return "없음";
+        System.out.println(restaurant.eventBadge(calculateTotalDiscount));
     }
 
 }

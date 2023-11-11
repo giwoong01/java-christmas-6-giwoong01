@@ -2,7 +2,10 @@ package christmas.view;
 
 import camp.nextstep.edu.missionutils.Console;
 import christmas.domain.Buyer;
-import java.util.Arrays;
+import christmas.domain.MenuAndCount;
+import christmas.domain.MenuAndCounts;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InputView {
     public int inputVisitDate() {
@@ -39,13 +42,36 @@ public class InputView {
         while (true) {
             try {
                 System.out.println("주문하실 메뉴를 메뉴와 개수를 알려 주세요. (e.g. 해산물파스타-2,레드와인-1,초코케이크-1)");
-                String inputMenuAndCount = Console.readLine();
-                String[] menuAndCounts = inputMenuAndCount.split(",");
+                String[] inputMenuAndCounts = Console.readLine().split(",");
+                List<MenuAndCount> menuAndCounts = createMenuAndCounts(inputMenuAndCounts);
 
-                return new Buyer(Arrays.stream(menuAndCounts).toList());
+                return new Buyer(new MenuAndCounts(menuAndCounts));
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    private List<MenuAndCount> createMenuAndCounts(String[] inputMenuAndCounts) {
+        List<MenuAndCount> menuAndCountList = new ArrayList<>();
+        for (String menuAndCount : inputMenuAndCounts) {
+            String[] split = validateOrderFormat(menuAndCount);
+            String menuName = split[0].trim();
+            String count = split[1].trim();
+
+            menuAndCountList.add(new MenuAndCount(menuName, count));
+        }
+
+        return menuAndCountList;
+    }
+
+    private String[] validateOrderFormat(String menuAndCount) {
+        String[] split = menuAndCount.split("-");
+
+        if (split.length != 2) {
+            throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+        }
+
+        return split;
     }
 }

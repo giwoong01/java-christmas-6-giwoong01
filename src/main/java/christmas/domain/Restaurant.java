@@ -77,4 +77,21 @@ public class Restaurant {
     public int presentationDiscount() {
         return 25000;
     }
+
+
+    public String eventBadge(int calculateTotalDiscount) {
+        if (calculateTotalDiscount >= 20000) {
+            return "산타";
+        }
+
+        if (calculateTotalDiscount >= 10000) {
+            return "트리";
+        }
+
+        if (calculateTotalDiscount >= 5000) {
+            return "별";
+        }
+
+        return "없음";
+    }
 }
