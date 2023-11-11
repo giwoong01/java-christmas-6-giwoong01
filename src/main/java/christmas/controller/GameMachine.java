@@ -21,5 +21,6 @@ public class GameMachine {
 
         System.out.println("\n<주문 메뉴>");
         System.out.println(buyer);
+
     }
 }

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Buyer {
-    private List<String> menuAndCounts;
+    private final List<String> menuAndCounts;
 
     public Buyer(List<String> menuOfNumbers) {
         this.menuAndCounts = menuOfNumbers;
