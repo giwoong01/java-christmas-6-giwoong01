@@ -5,4 +5,48 @@ public class Restaurant {
     public boolean isPresentation(int totalPrice) {
         return totalPrice > 120000;
     }
+
+    public boolean isChristmasDiscount(int date) {
+        return date < 26;
+    }
+
+    public boolean isWeekend(int date) {
+        for (Integer weekendDate : Date.WEEKEND.getDates()) {
+            if (weekendDate.equals(date)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    public int christmasDiscount(int date) {
+        int discount = 1000;
+
+        discount += 100 * (date - 1);
+
+        return discount;
+    }
+
+    public int weekdayDiscount() {
+        int count = 0;
+        for (Menu menu : Menu.values()) {
+            if (menu.name().contains("DESSERT")) {
+                count += 1;
+            }
+        }
+
+        return 2023 * count;
+    }
+
+    public int weekendDiscount() {
+        int count = 0;
+        for (Menu menu : Menu.values()) {
+            if (menu.name().contains("MAIN")) {
+                count += 1;
+            }
+        }
+
+        return 2023 * count;
+    }
 }

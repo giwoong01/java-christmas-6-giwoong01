@@ -7,10 +7,12 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 
 public class GameMachine {
+    private final NumberFormat numberFormat;
     private final Restaurant restaurant;
 
     public GameMachine() {
         this.restaurant = new Restaurant();
+        numberFormat = NumberFormat.getInstance();
     }
 
     public void start() {
@@ -31,7 +33,6 @@ public class GameMachine {
         System.out.println(buyer);
 
         System.out.println("\n<할인 전 총주문 금액>");
-        NumberFormat numberFormat = NumberFormat.getInstance();
         System.out.println(numberFormat.format(buyer.calculateTotalPrice()) + "원");
 
         System.out.println("\n<증정 메뉴>");
@@ -42,6 +43,33 @@ public class GameMachine {
         }
         System.out.println(presentationsMenu);
 
+        System.out.println("\n<혜택 내역>");
+        // 크리스마스 디데이
+        boolean isChristmasDiscount = restaurant.isChristmasDiscount(inputDate);
+        if (isChristmasDiscount) {
+            System.out.printf("크리스마스 디데이 할인: -%s원%n",
+                    numberFormat.format(restaurant.christmasDiscount(inputDate)));
+        }
+
+        // 평일 할인
+        String weekdayOrWeekendDiscount = "";
+        boolean isWeekend = restaurant.isWeekend(inputDate);
+        if (!isWeekend) {
+            weekdayOrWeekendDiscount = String.format("평일 할인: -%s원%n",
+                    numberFormat.format(restaurant.weekdayDiscount()));
+        }
+
+        // 주말 할인
+        if (isWeekend) {
+            weekdayOrWeekendDiscount = String.format("주말 할인: -%s원%n",
+                    numberFormat.format(restaurant.weekendDiscount()));
+        }
+
+        System.out.println(weekdayOrWeekendDiscount);
+
+        // 특별 할인
+
+        // 증정 이벤트
 
     }
 
