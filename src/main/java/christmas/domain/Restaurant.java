@@ -19,7 +19,27 @@ public class Restaurant {
 
         return false;
     }
-    
+
+    public boolean isWeekday(int date) {
+        for (Integer weekendDate : Date.WEEKEND.getDates()) {
+            if (!weekendDate.equals(date)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isStar(int date) {
+        for (Integer starDate : Date.STAR.getDates()) {
+            if (starDate.equals(date)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public int christmasDiscount(int date) {
         int discount = 1000;
 
@@ -48,5 +68,13 @@ public class Restaurant {
         }
 
         return 2023 * count;
+    }
+
+    public int starDiscount() {
+        return 1000;
+    }
+
+    public int presentationDiscount() {
+        return 25000;
     }
 }

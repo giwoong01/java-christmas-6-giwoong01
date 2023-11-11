@@ -43,34 +43,94 @@ public class GameMachine {
         }
         System.out.println(presentationsMenu);
 
+        // 혜택 내역
         System.out.println("\n<혜택 내역>");
+        boolean isDiscount = buyer.calculateTotalPrice() >= 10000;
+        int calculateTotalDiscount = 0;
         // 크리스마스 디데이
         boolean isChristmasDiscount = restaurant.isChristmasDiscount(inputDate);
-        if (isChristmasDiscount) {
+        if (isChristmasDiscount && isDiscount) {
+            calculateTotalDiscount += restaurant.christmasDiscount(inputDate);
             System.out.printf("크리스마스 디데이 할인: -%s원%n",
                     numberFormat.format(restaurant.christmasDiscount(inputDate)));
         }
 
         // 평일 할인
+        // 주말 할인
         String weekdayOrWeekendDiscount = "";
-        boolean isWeekend = restaurant.isWeekend(inputDate);
-        if (!isWeekend) {
+        boolean isWeekday = restaurant.isWeekday(inputDate);
+        if (isWeekday && isDiscount) {
+            calculateTotalDiscount += restaurant.weekdayDiscount();
             weekdayOrWeekendDiscount = String.format("평일 할인: -%s원%n",
                     numberFormat.format(restaurant.weekdayDiscount()));
         }
 
-        // 주말 할인
-        if (isWeekend) {
+        boolean isWeekend = restaurant.isWeekend(inputDate);
+        if (isWeekend && isDiscount) {
+            calculateTotalDiscount += restaurant.weekendDiscount();
             weekdayOrWeekendDiscount = String.format("주말 할인: -%s원%n",
                     numberFormat.format(restaurant.weekendDiscount()));
         }
-
-        System.out.println(weekdayOrWeekendDiscount);
+        System.out.print(weekdayOrWeekendDiscount);
 
         // 특별 할인
+        boolean isStar = restaurant.isStar(inputDate);
+        if (isStar && isDiscount) {
+            calculateTotalDiscount += restaurant.starDiscount();
+            System.out.printf("특별 할인: -%s원%n",
+                    numberFormat.format(restaurant.starDiscount()));
+        }
 
         // 증정 이벤트
+        if (isPresentation && isDiscount) {
+            calculateTotalDiscount += restaurant.presentationDiscount();
+            System.out.printf("증정 이벤트: -%s원%n",
+                    numberFormat.format(restaurant.presentationDiscount()));
+        }
 
+        if (!isDiscount) {
+            System.out.println("없음");
+        }
+
+        // 총혜택 금액
+        String totalBenefitAmount = String.format("%s원%n", calculateTotalDiscount);
+        System.out.println("\n<총혜택 금액>");
+        if (calculateTotalDiscount > 0) {
+            totalBenefitAmount = String.format("-%s원%n", numberFormat.format(calculateTotalDiscount));
+        }
+        System.out.print(totalBenefitAmount);
+
+        // 할인 후 예상 결제 금액
+        System.out.println("\n<할인 후 예상 결제 금액>");
+        String discountAfterTotalPrice = String.format("%s원%n",
+                numberFormat.format(
+                        buyer.calculateTotalPrice() - calculateTotalDiscount));
+        if (isPresentation) {
+            discountAfterTotalPrice = String.format("%s원%n",
+                    numberFormat.format(
+                            buyer.calculateTotalPrice() - calculateTotalDiscount + restaurant.presentationDiscount()));
+        }
+        System.out.print(discountAfterTotalPrice);
+
+        // 12월 이벤트 배지
+        System.out.println("\n<12월 이벤트 배지>");
+        System.out.println(eventBadge(calculateTotalDiscount));
+    }
+
+    private String eventBadge(int calculateTotalDiscount) {
+        if (calculateTotalDiscount >= 20000) {
+            return "산타";
+        }
+
+        if (calculateTotalDiscount >= 10000) {
+            return "트리";
+        }
+
+        if (calculateTotalDiscount >= 5000) {
+            return "별";
+        }
+
+        return "없음";
     }
 
 }
