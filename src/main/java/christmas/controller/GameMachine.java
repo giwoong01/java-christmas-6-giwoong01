@@ -47,7 +47,12 @@ public class GameMachine {
     }
 
     private void showPresentedMenu(boolean isPresentation) {
-        outputView.presentedMenuMessage(isPresentation);
+        String presentationsMenu = "없음";
+
+        if (isPresentation) {
+            presentationsMenu = "샴페인 1개";
+        }
+        outputView.presentedMenuMessage(presentationsMenu);
     }
 
     private void applyBenefits(Buyer buyer, int inputDate, boolean isPresentation) {
@@ -55,7 +60,12 @@ public class GameMachine {
     }
 
     private void showTotalBenefitAmount() {
-        outputView.totalBenefitAmount(calculateTotalDiscount);
+        String totalBenefitAmount = String.format("%s원%n", calculateTotalDiscount);
+
+        if (calculateTotalDiscount > 0) {
+            totalBenefitAmount = String.format("-%s원%n", numberFormat.format(calculateTotalDiscount));
+        }
+        outputView.totalBenefitAmount(totalBenefitAmount);
     }
 
     private void calculateFinalPrice(Buyer buyer, boolean isPresentation) {

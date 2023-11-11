@@ -25,13 +25,8 @@ public class OutputView {
         System.out.println(numberFormat.format(buyer.getTotalPrice()) + "원");
     }
 
-    public void presentedMenuMessage(boolean isPresentation) {
+    public void presentedMenuMessage(String presentationsMenu) {
         System.out.println("\n<증정 메뉴>");
-        String presentationsMenu = "없음";
-
-        if (isPresentation) {
-            presentationsMenu = "샴페인 1개";
-        }
         System.out.println(presentationsMenu);
     }
 
@@ -56,13 +51,8 @@ public class OutputView {
         System.out.println("\n<혜택 내역>");
     }
 
-    public void totalBenefitAmount(int calculateTotalDiscount) {
-        String totalBenefitAmount = String.format("%s원%n", calculateTotalDiscount);
+    public void totalBenefitAmount(String totalBenefitAmount) {
         System.out.println("\n<총혜택 금액>");
-
-        if (calculateTotalDiscount > 0) {
-            totalBenefitAmount = String.format("-%s원%n", numberFormat.format(calculateTotalDiscount));
-        }
         System.out.print(totalBenefitAmount);
     }
 
