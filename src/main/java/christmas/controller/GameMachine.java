@@ -2,10 +2,16 @@ package christmas.controller;
 
 import camp.nextstep.edu.missionutils.Console;
 import christmas.domain.Buyer;
+import christmas.domain.Restaurant;
 import java.text.NumberFormat;
 import java.util.Arrays;
 
 public class GameMachine {
+    private final Restaurant restaurant;
+
+    public GameMachine() {
+        this.restaurant = new Restaurant();
+    }
 
     public void start() {
         // 구매자 입력
@@ -24,10 +30,19 @@ public class GameMachine {
         System.out.println("\n<주문 메뉴>");
         System.out.println(buyer);
 
-        System.out.println("\n할인 전 총주문 금액");
+        System.out.println("\n<할인 전 총주문 금액>");
         NumberFormat numberFormat = NumberFormat.getInstance();
         System.out.println(numberFormat.format(buyer.calculateTotalPrice()) + "원");
 
+        System.out.println("\n<증정 메뉴>");
+        String presentationsMenu = "없음";
+        boolean isPresentation = restaurant.isPresentation(buyer.calculateTotalPrice());
+        if (isPresentation) {
+            presentationsMenu = "샴페인 1개";
+        }
+        System.out.println(presentationsMenu);
+
 
     }
+
 }
