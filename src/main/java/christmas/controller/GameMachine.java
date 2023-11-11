@@ -3,99 +3,125 @@ package christmas.controller;
 import christmas.domain.Buyer;
 import christmas.domain.Restaurant;
 import christmas.view.InputView;
+import christmas.view.OutputView;
 import java.text.NumberFormat;
 
 public class GameMachine {
-    private final NumberFormat numberFormat;
     private final Restaurant restaurant;
     private final InputView inputView;
+    private final OutputView outputView;
+
+    private final NumberFormat numberFormat;
+    private int calculateTotalDiscount;
 
     public GameMachine() {
         this.restaurant = new Restaurant();
         this.inputView = new InputView();
+        this.outputView = new OutputView();
         numberFormat = NumberFormat.getInstance();
+        calculateTotalDiscount = 0;
     }
 
     public void start() {
         int inputDate = inputView.inputVisitDate();
-        Buyer buyer = inputView.inputMenuAndCounts();
+        Buyer buyer = inputBuyerInfo();
 
-        // 출력
-        System.out.printf("12월 %d일 우테코 식당에서 받을 이벤트 혜택 미리 보기!%n", inputDate);
+        outputView.previewEventBenefitMessage(inputDate);
+        showOrderMenu(buyer);
 
-        System.out.println("\n<주문 메뉴>");
-        System.out.println(buyer);
-
-        System.out.println("\n<할인 전 총주문 금액>");
-        System.out.println(numberFormat.format(buyer.getTotalPrice()) + "원");
-
-        System.out.println("\n<증정 메뉴>");
-        String presentationsMenu = "없음";
         boolean isPresentation = restaurant.isPresentation(buyer.getTotalPrice());
-        if (isPresentation) {
-            presentationsMenu = "샴페인 1개";
-        }
-        System.out.println(presentationsMenu);
+        showPresentedMenu(isPresentation);
+        applyBenefits(buyer, inputDate, isPresentation);
+        showTotalBenefitAmount();
+        calculateFinalPrice(buyer, isPresentation);
+        outputView.eventBadgeMessage(restaurant, calculateTotalDiscount);
+    }
 
-        // 혜택 내역
-        System.out.println("\n<혜택 내역>");
-        boolean isDiscount = buyer.getTotalPrice() >= 10000;
-        int calculateTotalDiscount = 0;
-        // 크리스마스 디데이
-        boolean isChristmasDiscount = restaurant.isChristmasDiscount(inputDate);
-        if (isChristmasDiscount && isDiscount) {
+    private Buyer inputBuyerInfo() {
+        return inputView.inputMenuAndCounts();
+    }
+
+    private void showOrderMenu(Buyer buyer) {
+        outputView.orderMenuMessage(buyer);
+        outputView.totalPriceBeforeDiscountMessage(buyer);
+    }
+
+    private void showPresentedMenu(boolean isPresentation) {
+        outputView.presentedMenuMessage(isPresentation);
+    }
+
+    private void applyBenefits(Buyer buyer, int inputDate, boolean isPresentation) {
+        benefitsDetails(buyer, inputDate, isPresentation);
+    }
+
+    private void showTotalBenefitAmount() {
+        outputView.totalBenefitAmount(calculateTotalDiscount);
+    }
+
+    private void calculateFinalPrice(Buyer buyer, boolean isPresentation) {
+        discountAfterTotalPrice(buyer, calculateTotalDiscount, isPresentation);
+    }
+
+    private void benefitsDetails(Buyer buyer, int inputDate, boolean isPresentation) {
+        outputView.benefitsDetailsMessage();
+        if (buyer.getTotalPrice() >= 10000) {
+            applyChristmasDayDiscount(inputDate);
+            applyWeekdayOrWeekendDiscount(inputDate);
+            applyStarDiscount(inputDate);
+            applyPresentationDiscount(isPresentation);
+            return;
+        }
+
+        System.out.println("없음");
+    }
+
+    private void applyChristmasDayDiscount(int inputDate) {
+        if (restaurant.isChristmasDiscount(inputDate)) {
             calculateTotalDiscount += restaurant.christmasDiscount(inputDate);
-            System.out.printf("크리스마스 디데이 할인: -%s원%n",
-                    numberFormat.format(restaurant.christmasDiscount(inputDate)));
+            outputView.christmasDayDiscountMessage(inputDate, restaurant);
+        }
+    }
+
+    private void applyWeekdayOrWeekendDiscount(int inputDate) {
+        if (restaurant.isWeekday(inputDate)) {
+            weekdayDiscount();
         }
 
-        // 평일 할인
-        // 주말 할인
-        String weekdayOrWeekendDiscount = "";
-        boolean isWeekday = restaurant.isWeekday(inputDate);
-        if (isWeekday && isDiscount) {
-            calculateTotalDiscount += restaurant.weekdayDiscount();
-            weekdayOrWeekendDiscount = String.format("평일 할인: -%s원%n",
-                    numberFormat.format(restaurant.weekdayDiscount()));
+        if (restaurant.isWeekend(inputDate)) {
+            weekendDiscount();
         }
+    }
 
-        boolean isWeekend = restaurant.isWeekend(inputDate);
-        if (isWeekend && isDiscount) {
-            calculateTotalDiscount += restaurant.weekendDiscount();
-            weekdayOrWeekendDiscount = String.format("주말 할인: -%s원%n",
-                    numberFormat.format(restaurant.weekendDiscount()));
-        }
-        System.out.print(weekdayOrWeekendDiscount);
+    private void weekdayDiscount() {
+        String weekdayDiscount = calculateDiscount(restaurant.weekdayDiscount(), "평일");
+        outputView.weekdayOrWeekendDiscountMessage(weekdayDiscount);
+    }
 
-        // 특별 할인
-        boolean isStar = restaurant.isStar(inputDate);
-        if (isStar && isDiscount) {
+    private void weekendDiscount() {
+        String weekendDiscount = calculateDiscount(restaurant.weekendDiscount(), "주말");
+        outputView.weekdayOrWeekendDiscountMessage(weekendDiscount);
+    }
+
+    private String calculateDiscount(int discountAmount, String discountType) {
+        calculateTotalDiscount += discountAmount;
+        return String.format("%s 할인: -%s원%n", discountType, numberFormat.format(discountAmount));
+    }
+
+    private void applyStarDiscount(int inputDate) {
+        if (restaurant.isStar(inputDate)) {
             calculateTotalDiscount += restaurant.starDiscount();
-            System.out.printf("특별 할인: -%s원%n",
-                    numberFormat.format(restaurant.starDiscount()));
+            outputView.startDiscountMessage(restaurant);
         }
+    }
 
-        // 증정 이벤트
-        if (isPresentation && isDiscount) {
+    private void applyPresentationDiscount(boolean isPresentation) {
+        if (isPresentation) {
             calculateTotalDiscount += restaurant.presentationDiscount();
-            System.out.printf("증정 이벤트: -%s원%n",
-                    numberFormat.format(restaurant.presentationDiscount()));
+            outputView.presentationDiscountMessage(restaurant);
         }
+    }
 
-        if (!isDiscount) {
-            System.out.println("없음");
-        }
-
-        // 총혜택 금액
-        String totalBenefitAmount = String.format("%s원%n", calculateTotalDiscount);
-        System.out.println("\n<총혜택 금액>");
-        if (calculateTotalDiscount > 0) {
-            totalBenefitAmount = String.format("-%s원%n", numberFormat.format(calculateTotalDiscount));
-        }
-        System.out.print(totalBenefitAmount);
-
-        // 할인 후 예상 결제 금액
-        System.out.println("\n<할인 후 예상 결제 금액>");
+    private void discountAfterTotalPrice(Buyer buyer, int calculateTotalDiscount, boolean isPresentation) {
         String discountAfterTotalPrice = String.format("%s원%n",
                 numberFormat.format(
                         buyer.getTotalPrice() - calculateTotalDiscount));
@@ -104,11 +130,7 @@ public class GameMachine {
                     numberFormat.format(
                             buyer.getTotalPrice() - calculateTotalDiscount + restaurant.presentationDiscount()));
         }
-        System.out.print(discountAfterTotalPrice);
-
-        // 12월 이벤트 배지
-        System.out.println("\n<12월 이벤트 배지>");
-        System.out.println(restaurant.eventBadge(calculateTotalDiscount));
+        outputView.discountAfterTotalPriceMessage(discountAfterTotalPrice);
     }
 
 }

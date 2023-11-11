@@ -80,7 +80,6 @@ public class Restaurant {
         return 25000;
     }
 
-
     public String eventBadge(int calculateTotalDiscount) {
         if (calculateTotalDiscount >= 20000) {
             return "산타";
