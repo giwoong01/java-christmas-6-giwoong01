@@ -2,6 +2,7 @@ package christmas.controller;
 
 import camp.nextstep.edu.missionutils.Console;
 import christmas.domain.Buyer;
+import java.text.NumberFormat;
 import java.util.Arrays;
 
 public class GameMachine {
@@ -17,10 +18,16 @@ public class GameMachine {
         String[] menuAndCounts = inputMenuAndCount.split(",");
         Buyer buyer = new Buyer(Arrays.stream(menuAndCounts).toList());
 
+        // 출력
         System.out.printf("12월 %d일 우테코 식당에서 받을 이벤트 혜택 미리 보기!%n", inputDate);
 
         System.out.println("\n<주문 메뉴>");
         System.out.println(buyer);
+
+        System.out.println("\n할인 전 총주문 금액");
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        System.out.println(numberFormat.format(buyer.calculateTotalPrice()) + "원");
+
 
     }
 }
