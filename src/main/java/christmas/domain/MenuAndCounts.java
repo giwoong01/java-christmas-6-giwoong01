@@ -59,13 +59,11 @@ public class MenuAndCounts {
         String menuName = menuAndCount.getMenuName();
         int count = menuAndCount.getCount();
 
-        for (Menu menu : Menu.values()) {
-            if (menu.getName().equals(menuName)) {
-                return menu.getPrice() * count;
-            }
-        }
-
-        throw new IllegalArgumentException("Invalid menu name: " + menuName);
+        return Arrays.stream(Menu.values())
+                .filter(menu -> menu.getName().equals(menuName))
+                .findFirst()
+                .map(menu -> menu.getPrice() * count)
+                .orElse(0);
     }
 
     @Override
