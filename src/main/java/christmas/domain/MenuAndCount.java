@@ -1,11 +1,14 @@
 package christmas.domain;
 
+import christmas.domain.menu.Menu;
+import java.util.Arrays;
+
 public class MenuAndCount {
     private final String menuName;
     private final int count;
 
     public MenuAndCount(String menuName, String count) {
-        validateNotExistsMenuName(menuName);
+        validateNotExistsMenu(menuName);
         this.menuName = menuName;
 
         validateCountIsNumber(count);
@@ -13,11 +16,12 @@ public class MenuAndCount {
         this.count = Integer.parseInt(count);
     }
 
-    private void validateNotExistsMenuName(String menuName) {
-        for (Menu menu : Menu.values()) {
-            if (!menu.getName().equals(menuName)) {
-                throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
-            }
+    private void validateNotExistsMenu(String menuName) {
+        boolean isExists = Arrays.stream(Menu.values())
+                .anyMatch(menu -> menu.getName().equals(menuName));
+
+        if (!isExists) {
+            throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
         }
     }
 

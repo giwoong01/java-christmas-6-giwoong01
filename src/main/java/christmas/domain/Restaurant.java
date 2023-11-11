@@ -1,5 +1,7 @@
 package christmas.domain;
 
+import christmas.domain.menu.Menu;
+
 public class Restaurant {
 
     public boolean isPresentation(int totalPrice) {

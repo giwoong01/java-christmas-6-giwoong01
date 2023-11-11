@@ -1,5 +1,8 @@
 package christmas.domain;
 
+import christmas.domain.menu.Menu;
+import christmas.domain.menu.MenuCategory;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -7,14 +10,28 @@ import java.util.stream.Collectors;
 
 public class MenuAndCounts {
     private final List<MenuAndCount> menuAndCounts;
-    private int totalCount;
+    private final int totalCount;
 
     public MenuAndCounts(List<MenuAndCount> menuAndCounts) {
-        validateDuplicateMenu();
         this.menuAndCounts = menuAndCounts;
+        validateIncludesFoodOrder();
+
+        validateDuplicateMenu();
         this.totalCount = menuAndCounts.stream()
                 .mapToInt(MenuAndCount::getCount)
                 .sum();
+        validateMaxMenuOrderCount();
+    }
+
+    private void validateIncludesFoodOrder() {
+        boolean hasFoodOrder = menuAndCounts.stream()
+                .anyMatch(menuAndCount -> Arrays.stream(Menu.values())
+                        .filter(menu -> menu.getName().equals(menuAndCount.getMenuName()))
+                        .anyMatch(menu -> menu.getCategory() != MenuCategory.DRINK));
+
+        if (!hasFoodOrder) {
+            throw new IllegalArgumentException("[ERROR] 음료만 주문할 수 없습니다.");
+        }
     }
 
     private void validateDuplicateMenu() {
@@ -23,6 +40,12 @@ public class MenuAndCounts {
             if (!duplicateMenu.add(menuAndCount.getMenuName())) {
                 throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
             }
+        }
+    }
+
+    private void validateMaxMenuOrderCount() {
+        if (totalCount > 20) {
+            throw new IllegalArgumentException("[ERROR] 메뉴는 한 번에 20개까지만 주문 가능합니다.");
         }
     }
 
