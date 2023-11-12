@@ -3,9 +3,7 @@ package christmas.domain;
 import christmas.domain.menu.Menu;
 import christmas.domain.menu.MenuCategory;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MenuAndCounts {
@@ -35,11 +33,13 @@ public class MenuAndCounts {
     }
 
     private void validateDuplicateMenu() {
-        Set<String> duplicateMenu = new HashSet<>();
-        for (MenuAndCount menuAndCount : menuAndCounts) {
-            if (!duplicateMenu.add(menuAndCount.getMenuName())) {
-                throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
-            }
+        long uniqueMenuCount = menuAndCounts.stream()
+                .map(MenuAndCount::getMenuName)
+                .distinct()
+                .count();
+
+        if (uniqueMenuCount != menuAndCounts.size()) {
+            throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
         }
     }
 
