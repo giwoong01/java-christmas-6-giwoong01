@@ -53,16 +53,16 @@ public class InputView {
     }
 
     private List<MenuAndCount> createMenuAndCounts(String[] inputMenuAndCounts) {
-        List<MenuAndCount> menuAndCountList = new ArrayList<>();
+        List<MenuAndCount> menuAndCounts = new ArrayList<>();
         for (String menuAndCount : inputMenuAndCounts) {
             String[] split = validateOrderFormat(menuAndCount);
             String menuName = split[0].trim();
             String count = split[1].trim();
 
-            menuAndCountList.add(new MenuAndCount(menuName, count));
+            menuAndCounts.add(new MenuAndCount(menuName, count));
         }
 
-        return menuAndCountList;
+        return menuAndCounts;
     }
 
     private String[] validateOrderFormat(String menuAndCount) {

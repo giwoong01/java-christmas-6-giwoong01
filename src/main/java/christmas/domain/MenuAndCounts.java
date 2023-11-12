@@ -30,7 +30,7 @@ public class MenuAndCounts {
                         .anyMatch(menu -> menu.getCategory() != MenuCategory.DRINK));
 
         if (!hasFoodOrder) {
-            throw new IllegalArgumentException("[ERROR] 음료만 주문할 수 없습니다.");
+            throw new IllegalArgumentException("[ERROR] 음료만 주문할 수 없습니다. 다시 입력해 주세요.");
         }
     }
 
@@ -45,7 +45,7 @@ public class MenuAndCounts {
 
     private void validateMaxMenuOrderCount() {
         if (totalCount > 20) {
-            throw new IllegalArgumentException("[ERROR] 메뉴는 한 번에 20개까지만 주문 가능합니다.");
+            throw new IllegalArgumentException("[ERROR] 메뉴는 한 번에 20개까지만 주문 가능합니다. 다시 입력해 주세요");
         }
     }
 
