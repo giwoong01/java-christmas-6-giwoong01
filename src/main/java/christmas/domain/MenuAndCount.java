@@ -49,6 +49,6 @@ public class MenuAndCount {
 
     @Override
     public String toString() {
-        return String.format("%s %s개", menuName, count);
+        return String.format("%s %d개", menuName, count);
     }
 }
