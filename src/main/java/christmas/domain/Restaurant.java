@@ -1,11 +1,14 @@
 package christmas.domain;
 
 import christmas.domain.menu.Menu;
+import christmas.domain.menu.MenuCategory;
+import java.util.Arrays;
+import java.util.List;
 
 public class Restaurant {
 
     public boolean isPresentation(int totalPrice) {
-        return totalPrice > 120000;
+        return totalPrice >= 120000;
     }
 
     public boolean isChristmasDiscount(int date) {
@@ -23,8 +26,8 @@ public class Restaurant {
     }
 
     public boolean isWeekday(int date) {
-        for (Integer weekendDate : Date.WEEKEND.getDates()) {
-            if (!weekendDate.equals(date)) {
+        for (Integer weekendDate : Date.WEEKDAY.getDates()) {
+            if (weekendDate.equals(date)) {
                 return true;
             }
         }
@@ -50,24 +53,28 @@ public class Restaurant {
         return discount;
     }
 
-    public int weekdayDiscount() {
-        int count = 0;
-        for (Menu menu : Menu.values()) {
-            if (menu.name().contains("DESSERT")) {
-                count += 1;
-            }
-        }
+    public int weekdayDiscount(Buyer buyer) {
+        List<MenuAndCount> menuAndCounts = buyer.getMenuAndCounts();
+
+        int count = menuAndCounts.stream()
+                .filter(mac -> Arrays.stream(Menu.values())
+                        .anyMatch(menu -> menu.getCategory().equals(MenuCategory.DESSERT)
+                                && menu.getName().contains(mac.getMenuName())))
+                .mapToInt(MenuAndCount::getCount)
+                .sum();
 
         return 2023 * count;
     }
 
-    public int weekendDiscount() {
-        int count = 0;
-        for (Menu menu : Menu.values()) {
-            if (menu.name().contains("MAIN")) {
-                count += 1;
-            }
-        }
+    public int weekendDiscount(Buyer buyer) {
+        List<MenuAndCount> menuAndCounts = buyer.getMenuAndCounts();
+
+        int count = menuAndCounts.stream()
+                .filter(mac -> Arrays.stream(Menu.values())
+                        .anyMatch(menu -> menu.getCategory().equals(MenuCategory.MAIN)
+                                && menu.getName().contains(mac.getMenuName())))
+                .mapToInt(MenuAndCount::getCount)
+                .sum();
 
         return 2023 * count;
     }

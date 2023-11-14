@@ -1,5 +1,7 @@
 package christmas.domain;
 
+import java.util.List;
+
 public class Buyer {
     private final MenuAndCounts menuAndCounts;
 
@@ -9,6 +11,10 @@ public class Buyer {
 
     public int getTotalPrice() {
         return menuAndCounts.calculateTotalPrice();
+    }
+
+    public List<MenuAndCount> getMenuAndCounts() {
+        return menuAndCounts.getMenuAndCounts();
     }
 
     @Override

@@ -18,7 +18,7 @@ class MenuAndCountsTest {
     MenuAndCount drinkMenu2;
 
     @BeforeEach
-    public void setup() {
+    public void setUp() {
         mainMenu1 = new MenuAndCount("티본스테이크", "1");
         mainMenu2 = new MenuAndCount("티본스테이크", "15");
         mainMenu3 = new MenuAndCount("바비큐립", "1");
@@ -94,5 +94,5 @@ class MenuAndCountsTest {
 
         assertThat(menuAndCounts.calculateTotalPrice()).isEqualTo(totalPrice);
     }
-    
+
 }

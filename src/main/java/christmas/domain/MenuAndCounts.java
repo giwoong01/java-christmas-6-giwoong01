@@ -3,6 +3,7 @@ package christmas.domain;
 import christmas.domain.menu.Menu;
 import christmas.domain.menu.MenuCategory;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,6 +65,10 @@ public class MenuAndCounts {
                 .findFirst()
                 .map(menu -> menu.getPrice() * count)
                 .orElse(0);
+    }
+
+    public List<MenuAndCount> getMenuAndCounts() {
+        return Collections.unmodifiableList(menuAndCounts);
     }
 
     @Override

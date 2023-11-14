@@ -25,6 +25,7 @@ public class GameMachine {
     public void start() {
         int inputDate = inputView.inputVisitDate();
         Buyer buyer = inputBuyerInfo();
+        System.out.println(buyer.getMenuAndCounts());
 
         outputView.previewEventBenefitMessage(inputDate);
         showOrderMenu(buyer);
@@ -76,7 +77,7 @@ public class GameMachine {
         outputView.benefitsDetailsMessage();
         if (buyer.getTotalPrice() >= 10000) {
             applyChristmasDayDiscount(inputDate);
-            applyWeekdayOrWeekendDiscount(inputDate);
+            applyWeekdayOrWeekendDiscount(inputDate, buyer);
             applyStarDiscount(inputDate);
             applyPresentationDiscount(isPresentation);
             return;
@@ -92,27 +93,30 @@ public class GameMachine {
         }
     }
 
-    private void applyWeekdayOrWeekendDiscount(int inputDate) {
+    private void applyWeekdayOrWeekendDiscount(int inputDate, Buyer buyer) {
         if (restaurant.isWeekday(inputDate)) {
-            weekdayDiscount();
+            weekdayDiscount(buyer);
         }
 
         if (restaurant.isWeekend(inputDate)) {
-            weekendDiscount();
+            weekendDiscount(buyer);
         }
     }
 
-    private void weekdayDiscount() {
-        String weekdayDiscount = calculateDiscount(restaurant.weekdayDiscount(), "평일");
+    private void weekdayDiscount(Buyer buyer) {
+        String weekdayDiscount = calculateDiscount(restaurant.weekdayDiscount(buyer), "평일");
         outputView.weekdayOrWeekendDiscountMessage(weekdayDiscount);
     }
 
-    private void weekendDiscount() {
-        String weekendDiscount = calculateDiscount(restaurant.weekendDiscount(), "주말");
+    private void weekendDiscount(Buyer buyer) {
+        String weekendDiscount = calculateDiscount(restaurant.weekendDiscount(buyer), "주말");
         outputView.weekdayOrWeekendDiscountMessage(weekendDiscount);
     }
 
     private String calculateDiscount(int discountAmount, String discountType) {
+        if (discountAmount == 0) {
+            return "";
+        }
         calculateTotalDiscount += discountAmount;
         return String.format("%s 할인: -%s원%n", discountType, numberFormat.format(discountAmount));
     }
