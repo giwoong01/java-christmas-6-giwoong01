@@ -1,5 +1,17 @@
 package christmas.view;
 
+import static christmas.message.ErrorMessage.INVALID_DATE_ERROR_MESSAGE;
+import static christmas.message.ErrorMessage.INVALID_ORDER_ERROR_MESSAGE;
+import static christmas.message.MessageConstants.COMMA;
+import static christmas.message.MessageConstants.EXPECTED_VISIT_DATE_PROMPT;
+import static christmas.message.MessageConstants.GREETING_EVENT_PLANNER;
+import static christmas.message.MessageConstants.HYPHEN;
+import static christmas.message.MessageConstants.ONE;
+import static christmas.message.MessageConstants.ORDER_MENU_PROMPT;
+import static christmas.message.MessageConstants.THIRTY_ONE;
+import static christmas.message.MessageConstants.TWO;
+import static christmas.message.MessageConstants.ZERO;
+
 import camp.nextstep.edu.missionutils.Console;
 import christmas.domain.Buyer;
 import christmas.domain.MenuAndCount;
@@ -11,8 +23,8 @@ public class InputView {
     public int inputVisitDate() {
         while (true) {
             try {
-                System.out.println("안녕하세요! 우테코 식당 12월 이벤트 플레너입니다.");
-                System.out.println("12월 중 식당 예상 방문 날짜는 언제인가요? (숫자만 입력해 주세요!)");
+                System.out.println(GREETING_EVENT_PLANNER);
+                System.out.println(EXPECTED_VISIT_DATE_PROMPT);
                 String inputDate = Console.readLine().trim();
 
                 validateNumericInput(inputDate);
@@ -28,21 +40,21 @@ public class InputView {
         try {
             Integer.parseInt(date);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("[ERROR] 유효하지 않은 날짜입니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(INVALID_DATE_ERROR_MESSAGE);
         }
     }
 
     private void validateDateRange(int date) {
-        if (date < 1 || date > 31) {
-            throw new IllegalArgumentException("[ERROR] 유효하지 않은 날짜입니다. 다시 입력해 주세요.");
+        if (date < ONE || date > THIRTY_ONE) {
+            throw new IllegalArgumentException(INVALID_DATE_ERROR_MESSAGE);
         }
     }
 
     public Buyer inputMenuAndCounts() {
         while (true) {
             try {
-                System.out.println("주문하실 메뉴를 메뉴와 개수를 알려 주세요. (e.g. 해산물파스타-2,레드와인-1,초코케이크-1)");
-                String[] inputMenuAndCounts = Console.readLine().split(",");
+                System.out.println(ORDER_MENU_PROMPT);
+                String[] inputMenuAndCounts = Console.readLine().split(COMMA);
                 List<MenuAndCount> menuAndCounts = createMenuAndCounts(inputMenuAndCounts);
 
                 return new Buyer(new MenuAndCounts(menuAndCounts));
@@ -56,8 +68,8 @@ public class InputView {
         List<MenuAndCount> menuAndCounts = new ArrayList<>();
         for (String menuAndCount : inputMenuAndCounts) {
             String[] split = validateOrderFormat(menuAndCount);
-            String menuName = split[0].trim();
-            String count = split[1].trim();
+            String menuName = split[ZERO].trim();
+            String count = split[ONE].trim();
 
             menuAndCounts.add(new MenuAndCount(menuName, count));
         }
@@ -66,10 +78,10 @@ public class InputView {
     }
 
     private String[] validateOrderFormat(String menuAndCount) {
-        String[] split = menuAndCount.split("-");
+        String[] split = menuAndCount.split(HYPHEN);
 
-        if (split.length != 2) {
-            throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+        if (split.length != TWO) {
+            throw new IllegalArgumentException(INVALID_ORDER_ERROR_MESSAGE);
         }
 
         return split;

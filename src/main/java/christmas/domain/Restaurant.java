@@ -1,18 +1,32 @@
 package christmas.domain;
 
+import static christmas.message.MessageConstants.FIVE_THOUSAND;
+import static christmas.message.MessageConstants.NOT_THING;
+import static christmas.message.MessageConstants.ONE;
+import static christmas.message.MessageConstants.ONE_HUNDRED;
+import static christmas.message.MessageConstants.ONE_HUNDRED_TWENTY_THOUSAND;
+import static christmas.message.MessageConstants.ONE_THOUSAND;
+import static christmas.message.MessageConstants.SANTA;
+import static christmas.message.MessageConstants.STAR;
+import static christmas.message.MessageConstants.TEN_THOUSAND;
+import static christmas.message.MessageConstants.TREE;
+import static christmas.message.MessageConstants.TWENTY_FIVE_THOUSAND;
+import static christmas.message.MessageConstants.TWENTY_SIX;
+import static christmas.message.MessageConstants.TWENTY_THOUSAND;
+import static christmas.message.MessageConstants.TWO_THOUSAND_TWENTY_THREE;
+
 import christmas.domain.menu.Menu;
 import christmas.domain.menu.MenuCategory;
 import java.util.Arrays;
 import java.util.List;
 
 public class Restaurant {
-
     public boolean isPresentation(int totalPrice) {
-        return totalPrice >= 120000;
+        return totalPrice >= ONE_HUNDRED_TWENTY_THOUSAND;
     }
 
     public boolean isChristmasDiscount(int date) {
-        return date < 26;
+        return date < TWENTY_SIX;
     }
 
     public boolean isWeekend(int date) {
@@ -46,9 +60,9 @@ public class Restaurant {
     }
 
     public int christmasDiscount(int date) {
-        int discount = 1000;
+        int discount = ONE_THOUSAND;
 
-        discount += 100 * (date - 1);
+        discount += ONE_HUNDRED * (date - ONE);
 
         return discount;
     }
@@ -63,7 +77,7 @@ public class Restaurant {
                 .mapToInt(MenuAndCount::getCount)
                 .sum();
 
-        return 2023 * count;
+        return TWO_THOUSAND_TWENTY_THREE * count;
     }
 
     public int weekendDiscount(Buyer buyer) {
@@ -76,30 +90,30 @@ public class Restaurant {
                 .mapToInt(MenuAndCount::getCount)
                 .sum();
 
-        return 2023 * count;
+        return TWO_THOUSAND_TWENTY_THREE * count;
     }
 
     public int starDiscount() {
-        return 1000;
+        return ONE_THOUSAND;
     }
 
     public int presentationDiscount() {
-        return 25000;
+        return TWENTY_FIVE_THOUSAND;
     }
 
     public String eventBadge(int calculateTotalDiscount) {
-        if (calculateTotalDiscount >= 20000) {
-            return "산타";
+        if (calculateTotalDiscount >= TWENTY_THOUSAND) {
+            return SANTA;
         }
 
-        if (calculateTotalDiscount >= 10000) {
-            return "트리";
+        if (calculateTotalDiscount >= TEN_THOUSAND) {
+            return TREE;
         }
 
-        if (calculateTotalDiscount >= 5000) {
-            return "별";
+        if (calculateTotalDiscount >= FIVE_THOUSAND) {
+            return STAR;
         }
 
-        return "없음";
+        return NOT_THING;
     }
 }

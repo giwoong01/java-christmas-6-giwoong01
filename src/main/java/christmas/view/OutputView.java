@@ -1,5 +1,19 @@
 package christmas.view;
 
+import static christmas.message.MessageConstants.BENEFIT_DETAILS;
+import static christmas.message.MessageConstants.CHRISTMAS_DISCOUNT_FORMAT;
+import static christmas.message.MessageConstants.DECEMBER_EVENT_BADGE;
+import static christmas.message.MessageConstants.EVENT_PREVIEW_FORMAT;
+import static christmas.message.MessageConstants.EXPECTED_PAYMENT_AFTER_DISCOUNT;
+import static christmas.message.MessageConstants.GIFT_EVENT_FORMAT;
+import static christmas.message.MessageConstants.GIFT_MENU;
+import static christmas.message.MessageConstants.NOT_THING;
+import static christmas.message.MessageConstants.ORDER_MENU;
+import static christmas.message.MessageConstants.STAR_DISCOUNT_FORMAT;
+import static christmas.message.MessageConstants.TOTAL_BEFORE_DISCOUNT;
+import static christmas.message.MessageConstants.TOTAL_BENEFIT_AMOUNT;
+import static christmas.message.MessageConstants.WON;
+
 import christmas.domain.Buyer;
 import christmas.domain.Restaurant;
 import java.text.NumberFormat;
@@ -12,57 +26,61 @@ public class OutputView {
     }
 
     public void previewEventBenefitMessage(int inputDate) {
-        System.out.printf("12월 %d일 우테코 식당에서 받을 이벤트 혜택 미리 보기!%n", inputDate);
+        System.out.printf(EVENT_PREVIEW_FORMAT, inputDate);
     }
 
     public void orderMenuMessage(Buyer buyer) {
-        System.out.println("\n<주문 메뉴>");
+        System.out.println(ORDER_MENU);
         System.out.println(buyer);
     }
 
     public void totalPriceBeforeDiscountMessage(Buyer buyer) {
-        System.out.println("\n<할인 전 총주문 금액>");
-        System.out.println(numberFormat.format(buyer.getTotalPrice()) + "원");
+        System.out.println(TOTAL_BEFORE_DISCOUNT);
+        System.out.println(numberFormat.format(buyer.getTotalPrice()) + WON);
     }
 
     public void presentedMenuMessage(String presentationsMenu) {
-        System.out.println("\n<증정 메뉴>");
+        System.out.println(GIFT_MENU);
         System.out.println(presentationsMenu);
     }
 
     public void christmasDayDiscountMessage(int inputDate, Restaurant restaurant) {
-        System.out.printf("크리스마스 디데이 할인: -%s원%n", numberFormat.format(restaurant.christmasDiscount(inputDate)));
+        System.out.printf(CHRISTMAS_DISCOUNT_FORMAT, numberFormat.format(restaurant.christmasDiscount(inputDate)));
     }
 
     public void weekdayOrWeekendDiscountMessage(String weekdayOrWeekendDiscount) {
         System.out.print(weekdayOrWeekendDiscount);
     }
 
-    public void startDiscountMessage(Restaurant restaurant) {
-        System.out.printf("특별 할인: -%s원%n", numberFormat.format(restaurant.starDiscount()));
+    public void starDiscountMessage(Restaurant restaurant) {
+        System.out.printf(STAR_DISCOUNT_FORMAT, numberFormat.format(restaurant.starDiscount()));
     }
 
     public void presentationDiscountMessage(Restaurant restaurant) {
-        System.out.printf("증정 이벤트: -%s원%n",
+        System.out.printf(GIFT_EVENT_FORMAT,
                 numberFormat.format(restaurant.presentationDiscount()));
     }
 
     public void benefitsDetailsMessage() {
-        System.out.println("\n<혜택 내역>");
+        System.out.println(BENEFIT_DETAILS);
     }
 
     public void totalBenefitAmount(String totalBenefitAmount) {
-        System.out.println("\n<총혜택 금액>");
+        System.out.println(TOTAL_BENEFIT_AMOUNT);
         System.out.print(totalBenefitAmount);
     }
 
     public void discountAfterTotalPriceMessage(String discountAfterTotalPrice) {
-        System.out.println("\n<할인 후 예상 결제 금액>");
+        System.out.println(EXPECTED_PAYMENT_AFTER_DISCOUNT);
         System.out.print(discountAfterTotalPrice);
     }
 
     public void eventBadgeMessage(Restaurant restaurant, int calculateTotalDiscount) {
-        System.out.println("\n<12월 이벤트 배지>");
+        System.out.println(DECEMBER_EVENT_BADGE);
         System.out.println(restaurant.eventBadge(calculateTotalDiscount));
+    }
+
+    public void printNone() {
+        System.out.println(NOT_THING);
     }
 }

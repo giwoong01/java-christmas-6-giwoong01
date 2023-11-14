@@ -1,5 +1,16 @@
 package christmas.controller;
 
+import static christmas.message.MessageConstants.CHAMPAGNE_ONE;
+import static christmas.message.MessageConstants.DISCOUNT_FORMAT;
+import static christmas.message.MessageConstants.EMPTY_STRING;
+import static christmas.message.MessageConstants.MINUS_WON_FORMAT;
+import static christmas.message.MessageConstants.NOT_THING;
+import static christmas.message.MessageConstants.TEN_THOUSAND;
+import static christmas.message.MessageConstants.WEEKDAY;
+import static christmas.message.MessageConstants.WEEKEND;
+import static christmas.message.MessageConstants.WON_FORMAT;
+import static christmas.message.MessageConstants.ZERO;
+
 import christmas.domain.Buyer;
 import christmas.domain.Restaurant;
 import christmas.view.InputView;
@@ -19,7 +30,7 @@ public class GameMachine {
         this.inputView = new InputView();
         this.outputView = new OutputView();
         numberFormat = NumberFormat.getInstance();
-        calculateTotalDiscount = 0;
+        calculateTotalDiscount = ZERO;
     }
 
     public void start() {
@@ -47,10 +58,10 @@ public class GameMachine {
     }
 
     private void showPresentedMenu(boolean isPresentation) {
-        String presentationsMenu = "없음";
+        String presentationsMenu = NOT_THING;
 
         if (isPresentation) {
-            presentationsMenu = "샴페인 1개";
+            presentationsMenu = CHAMPAGNE_ONE;
         }
         outputView.presentedMenuMessage(presentationsMenu);
     }
@@ -60,10 +71,10 @@ public class GameMachine {
     }
 
     private void showTotalBenefitAmount() {
-        String totalBenefitAmount = String.format("%s원%n", calculateTotalDiscount);
+        String totalBenefitAmount = String.format(WON_FORMAT, calculateTotalDiscount);
 
-        if (calculateTotalDiscount > 0) {
-            totalBenefitAmount = String.format("-%s원%n", numberFormat.format(calculateTotalDiscount));
+        if (calculateTotalDiscount > ZERO) {
+            totalBenefitAmount = String.format(MINUS_WON_FORMAT, numberFormat.format(calculateTotalDiscount));
         }
         outputView.totalBenefitAmount(totalBenefitAmount);
     }
@@ -74,7 +85,7 @@ public class GameMachine {
 
     private void benefitsDetails(Buyer buyer, int inputDate, boolean isPresentation) {
         outputView.benefitsDetailsMessage();
-        if (buyer.getTotalPrice() >= 10000) {
+        if (buyer.getTotalPrice() >= TEN_THOUSAND) {
             applyChristmasDayDiscount(inputDate);
             applyWeekdayOrWeekendDiscount(inputDate, buyer);
             applyStarDiscount(inputDate);
@@ -82,7 +93,7 @@ public class GameMachine {
             return;
         }
 
-        System.out.println("없음");
+        outputView.printNone();
     }
 
     private void applyChristmasDayDiscount(int inputDate) {
@@ -103,27 +114,27 @@ public class GameMachine {
     }
 
     private void weekdayDiscount(Buyer buyer) {
-        String weekdayDiscount = calculateDiscount(restaurant.weekdayDiscount(buyer), "평일");
+        String weekdayDiscount = calculateDiscount(restaurant.weekdayDiscount(buyer), WEEKDAY);
         outputView.weekdayOrWeekendDiscountMessage(weekdayDiscount);
     }
 
     private void weekendDiscount(Buyer buyer) {
-        String weekendDiscount = calculateDiscount(restaurant.weekendDiscount(buyer), "주말");
+        String weekendDiscount = calculateDiscount(restaurant.weekendDiscount(buyer), WEEKEND);
         outputView.weekdayOrWeekendDiscountMessage(weekendDiscount);
     }
 
     private String calculateDiscount(int discountAmount, String discountType) {
-        if (discountAmount == 0) {
-            return "";
+        if (discountAmount == ZERO) {
+            return EMPTY_STRING;
         }
         calculateTotalDiscount += discountAmount;
-        return String.format("%s 할인: -%s원%n", discountType, numberFormat.format(discountAmount));
+        return String.format(DISCOUNT_FORMAT, discountType, numberFormat.format(discountAmount));
     }
 
     private void applyStarDiscount(int inputDate) {
         if (restaurant.isStar(inputDate)) {
             calculateTotalDiscount += restaurant.starDiscount();
-            outputView.startDiscountMessage(restaurant);
+            outputView.starDiscountMessage(restaurant);
         }
     }
 
@@ -135,11 +146,11 @@ public class GameMachine {
     }
 
     private void discountAfterTotalPrice(Buyer buyer, int calculateTotalDiscount, boolean isPresentation) {
-        String discountAfterTotalPrice = String.format("%s원%n",
+        String discountAfterTotalPrice = String.format(WON_FORMAT,
                 numberFormat.format(
                         buyer.getTotalPrice() - calculateTotalDiscount));
         if (isPresentation) {
-            discountAfterTotalPrice = String.format("%s원%n",
+            discountAfterTotalPrice = String.format(WON_FORMAT,
                     numberFormat.format(
                             buyer.getTotalPrice() - calculateTotalDiscount + restaurant.presentationDiscount()));
         }

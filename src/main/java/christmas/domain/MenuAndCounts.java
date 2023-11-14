@@ -1,5 +1,12 @@
 package christmas.domain;
 
+import static christmas.message.ErrorMessage.DRINKS_ONLY_ORDER_ERROR_MESSAGE;
+import static christmas.message.ErrorMessage.INVALID_ORDER_ERROR_MESSAGE;
+import static christmas.message.ErrorMessage.ORDER_SIZE_LIMIT_ERROR_MESSAGE;
+import static christmas.message.MessageConstants.NEW_LINE;
+import static christmas.message.MessageConstants.TWENTY;
+import static christmas.message.MessageConstants.ZERO;
+
 import christmas.domain.menu.Menu;
 import christmas.domain.menu.MenuCategory;
 import java.util.Arrays;
@@ -29,7 +36,7 @@ public class MenuAndCounts {
                         .anyMatch(menu -> menu.getCategory() != MenuCategory.DRINK));
 
         if (!hasFoodOrder) {
-            throw new IllegalArgumentException("[ERROR] 음료만 주문할 수 없습니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(DRINKS_ONLY_ORDER_ERROR_MESSAGE);
         }
     }
 
@@ -40,13 +47,13 @@ public class MenuAndCounts {
                 .count();
 
         if (uniqueMenuCount != menuAndCounts.size()) {
-            throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(INVALID_ORDER_ERROR_MESSAGE);
         }
     }
 
     private void validateMaxMenuOrderCount() {
-        if (totalCount > 20) {
-            throw new IllegalArgumentException("[ERROR] 메뉴는 한 번에 20개까지만 주문 가능합니다. 다시 입력해 주세요");
+        if (totalCount > TWENTY) {
+            throw new IllegalArgumentException(ORDER_SIZE_LIMIT_ERROR_MESSAGE);
         }
     }
 
@@ -64,7 +71,7 @@ public class MenuAndCounts {
                 .filter(menu -> menu.getName().equals(menuName))
                 .findFirst()
                 .map(menu -> menu.getPrice() * count)
-                .orElse(0);
+                .orElse(ZERO);
     }
 
     public List<MenuAndCount> getMenuAndCounts() {
@@ -75,7 +82,7 @@ public class MenuAndCounts {
     public String toString() {
         return menuAndCounts.stream()
                 .map(MenuAndCount::toString)
-                .collect(Collectors.joining("\n"));
+                .collect(Collectors.joining(NEW_LINE));
     }
 
 }

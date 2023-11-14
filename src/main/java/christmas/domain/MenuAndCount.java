@@ -1,5 +1,9 @@
 package christmas.domain;
 
+import static christmas.message.ErrorMessage.INVALID_ORDER_ERROR_MESSAGE;
+import static christmas.message.MessageConstants.MENU_NAME_AND_COUNT;
+import static christmas.message.MessageConstants.ONE;
+
 import christmas.domain.menu.Menu;
 import java.util.Arrays;
 
@@ -21,13 +25,13 @@ public class MenuAndCount {
                 .anyMatch(menu -> menu.getName().equals(menuName));
 
         if (!isExists) {
-            throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(INVALID_ORDER_ERROR_MESSAGE);
         }
     }
 
     private void validateCountIsPositive(int count) {
-        if (count < 1) {
-            throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+        if (count < ONE) {
+            throw new IllegalArgumentException(INVALID_ORDER_ERROR_MESSAGE);
         }
     }
 
@@ -35,7 +39,7 @@ public class MenuAndCount {
         try {
             Integer.parseInt(count);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(INVALID_ORDER_ERROR_MESSAGE);
         }
     }
 
@@ -49,6 +53,6 @@ public class MenuAndCount {
 
     @Override
     public String toString() {
-        return String.format("%s %d개", menuName, count);
+        return String.format(MENU_NAME_AND_COUNT, menuName, count);
     }
 }
