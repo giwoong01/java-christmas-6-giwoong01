@@ -25,7 +25,6 @@ public class GameMachine {
     public void start() {
         int inputDate = inputView.inputVisitDate();
         Buyer buyer = inputBuyerInfo();
-        System.out.println(buyer.getMenuAndCounts());
 
         outputView.previewEventBenefitMessage(inputDate);
         showOrderMenu(buyer);
